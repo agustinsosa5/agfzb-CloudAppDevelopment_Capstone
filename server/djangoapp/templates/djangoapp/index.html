@@ -13,13 +13,27 @@
 
 </head>
 
-    <body>
-    <!-- Remove this line the first time you edit this file -->
-     This is the index page of your Django app!
+    <body>   
     <!--Add a nav bar here -->
-
+    <nav class="navbar navbar-light bg-primary">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                  <a class="navbar-brand" href="#">Best Cars</a>
+                  <a class="navbar-brand" href="{% url 'djangoapp:about_us' %}">About Us</a>
+            </div>
+        </div>
+    </nav>
     <!--Add a dealer table here -->
-
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. A, nulla repudiandae magni repellat id iusto ex tenetur accusamus animi obcaecati laboriosam cum itaque! Veritatis reiciendis quam nemo cupiditate, nesciunt quia?
+        Incidunt, explicabo. Reiciendis repellat veniam, tempora perferendis maiores minima vitae ex iste cumque, aut quaerat doloribus fugiat eaque quibusdam neque corporis alias, voluptate assumenda voluptates dolor. Officia odio quisquam et.
+        Aperiam, placeat! Perspiciatis doloremque suscipit sint neque aliquam dolorum, enim ea corporis esse hic eligendi consequuntur accusamus numquam, quidem, quis est optio atque magnam ad aliquid? Vitae sapiente perferendis beatae.
+        Asperiores error ipsam quas eveniet, nihil temporibus deserunt sit iste fugit accusamus earum, rerum, blanditiis ab esse tempora! Dolore debitis iure recusandae error vitae sunt maiores maxime a nostrum tenetur?
+        Nihil aliquid ipsam iste, neque, libero odio, voluptas nemo excepturi soluta omnis voluptates explicabo maxime. Unde facere et, ducimus dicta nam error molestias iusto voluptas minima ut magni fuga! Debitis.
+        </p>
     </body>
-
+        <footer class="footer fixed-bottom bg-light">
+            <section class="d-flex">                
+                <a class="btn btn-link" href="{% url 'djangoapp:contact' %}">Contact Us</a>
+            </section>
+        </footer>
 </html>
