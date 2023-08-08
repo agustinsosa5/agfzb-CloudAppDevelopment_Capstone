@@ -15,21 +15,40 @@
 
     <body>   
     <!--Add a nav bar here -->
-    <nav class="navbar navbar-light bg-primary">
+    <nav class="navbar navbar-light bg-warning">
         <div class="container-fluid">
             <div class="navbar-header">
                   <a class="navbar-brand" href="#">Best Cars</a>
-                  <a class="navbar-brand" href="{% url 'djangoapp:about_us' %}">About Us</a>
-            </div>
+                  </div>
+                  <a class="nav" href="{% url 'djangoapp:about_us' %}">About Us</a>
+                  <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <div class="rightalign">
+                        <div class="dropdown">
+                            <button class="dropbtn">{{user.first_name}}</button>
+                            <div class="dropdown-content">
+                                 <a href="{% url 'djangoapp:logout' %}">Logout</a>
+                            </div>
+                        </div>
+                 </div>
+                    {% else %}
+                    <li>
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username" >
+                                <input type="password" class="form-control" placeholder="Password" name="psw" >
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>            
         </div>
     </nav>
     <!--Add a dealer table here -->
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. A, nulla repudiandae magni repellat id iusto ex tenetur accusamus animi obcaecati laboriosam cum itaque! Veritatis reiciendis quam nemo cupiditate, nesciunt quia?
-        Incidunt, explicabo. Reiciendis repellat veniam, tempora perferendis maiores minima vitae ex iste cumque, aut quaerat doloribus fugiat eaque quibusdam neque corporis alias, voluptate assumenda voluptates dolor. Officia odio quisquam et.
-        Aperiam, placeat! Perspiciatis doloremque suscipit sint neque aliquam dolorum, enim ea corporis esse hic eligendi consequuntur accusamus numquam, quidem, quis est optio atque magnam ad aliquid? Vitae sapiente perferendis beatae.
-        Asperiores error ipsam quas eveniet, nihil temporibus deserunt sit iste fugit accusamus earum, rerum, blanditiis ab esse tempora! Dolore debitis iure recusandae error vitae sunt maiores maxime a nostrum tenetur?
-        Nihil aliquid ipsam iste, neque, libero odio, voluptas nemo excepturi soluta omnis voluptates explicabo maxime. Unde facere et, ducimus dicta nam error molestias iusto voluptas minima ut magni fuga! Debitis.
-        </p>
+        
     </body>
         <footer class="footer fixed-bottom bg-light">
             <section class="d-flex">                
