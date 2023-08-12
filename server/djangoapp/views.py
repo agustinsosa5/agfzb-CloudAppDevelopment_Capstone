@@ -118,7 +118,7 @@ def get_dealer_details(request, dealer_id):
 
 def add_review(request, dealer_id):
     if request.method == "POST":
-        url = "URL_DE_API_AQUI"  # Asigna la URL de la API para publicar reseñas
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/post-review"  # Asigna la URL de la API para publicar reseñas
         
         # Crea el diccionario de la reseña
         review = {

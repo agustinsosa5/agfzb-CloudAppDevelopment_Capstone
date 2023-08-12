@@ -93,7 +93,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
 
 
 def analyze_review_sentiments(text, api_key):
-    url = "URL_DE_API_WATSON_NLU_AQUI"  # Reemplaza con la URL de la API de Watson NLU
+    url = "https://06f2eb7d-4394-4a35-9e47-cc29562d5dfa-bluemix.cloudantnosqldb.appdomain.cloud"  # Reemplaza con la URL de la API de Watson NLU
     kwargs = {
         "text": text,
         "version": "2021-03-25",  # Cambia a la versión adecuada de la API
