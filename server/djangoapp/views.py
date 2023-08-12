@@ -102,44 +102,53 @@ def get_dealerships(request):
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        context = {'dealerships': dealerships}
+        print(dealerships)
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
-
+        return render(request, 'djangoapp/index.html', context)
 
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/get-review"
-        dealer_review = get_dealer_reviews_from_cf(url, dealer_id, api_key)
-        review = ' '.join([dealer.review for dealer in dealer_review])
-        # Return a list of dealer short name
-        return HttpResponse(review)
+        api_key = "roRutREuggO1DJRzs0bUfP2mKMOMjnb6dfI5NQDSIV8z"  # Reemplaza con tu API Key
+        dealer_reviews = get_dealer_reviews_from_cf(url, dealer_id, api_key)
+
+        # Crea un contexto con las reseñas del concesionario
+        context = {
+            'dealer_reviews': dealer_reviews
+        }
+
+        # Renderiza la plantilla 'djangoapp/dealer_details.html' con el contexto
+        return render(request, 'djangoapp/dealer_details.html', context)
+
 
 
 def add_review(request, dealer_id):
-    if request.method == "POST":
-        url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/post-review"  # Asigna la URL de la API para publicar reseñas
-        
-        # Crea el diccionario de la reseña
-        review = {
-            "time": datetime.utcnow().isoformat(),
-            "dealership": dealer_id,
-            "review": request.POST.get('review')  # Obtiene la reseña del formulario o de donde sea necesario
+    if request.method == "GET":
+        # Query the cars with the dealer id to be reviewed
+        cars = Car.objects.filter(dealer_id=dealer_id)
+        context = {
+            "cars": cars,
         }
-        
-        # Crea el diccionario json_payload con la reseña
+        return render(request, "djangoapp/add_review.html", context)
+    
+    elif request.method == "POST":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/review"
         json_payload = {
-            "review": review
+            "review": {
+                "time": datetime.utcnow().isoformat(),
+                "dealership": int(dealer_id),
+                "review": request.POST.get("content"),
+                "purchase": request.POST.get("purchasecheck"),
+                "purchase_date": request.POST.get("purchasedate"),
+                "car_make": request.POST.get("car"),
+            }
         }
         
-        # Llama al método post_request para realizar la solicitud POST
-        response = post_request(url, json_payload, dealerId=dealer_id)
+        # Make the POST request to add the review
+        post_request(url, json_payload)
         
-        if response:
-            # Puedes imprimir la respuesta en la consola o incluirla en la respuesta HTTP
-            print("Post Response:", response)
-            return HttpResponse("Review added successfully.")
-        else:
-            return HttpResponse("Failed to add review.")
+        # Redirect user to the dealer details page
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
 
