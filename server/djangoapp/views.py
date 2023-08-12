@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
-# from .restapis import related methods
+from .models import CarDealer, CarMake, CarModel
+from .restapis import get_request, get_dealers_from_cf, get_dealer_reviews_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -97,17 +97,49 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-    # Replace this line with your logic to fetch the list of dealerships
-    dealerships = []  # Replace this with your actual list of dealerships
-    context = {'dealerships': dealerships}
-    return render(request, 'djangoapp/index.html', context)
+    if request.method == "GET":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/get-dealership"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
 
 
-# Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    if request.method == "GET":
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/d4b20026-84fb-49cb-a3e2-670b5ccdb663/dealership-package/get-review"
+        dealer_review = get_dealer_reviews_from_cf(url, dealer_id, api_key)
+        review = ' '.join([dealer.review for dealer in dealer_review])
+        # Return a list of dealer short name
+        return HttpResponse(review)
 
-# Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+
+def add_review(request, dealer_id):
+    if request.method == "POST":
+        url = "URL_DE_API_AQUI"  # Asigna la URL de la API para publicar reseñas
+        
+        # Crea el diccionario de la reseña
+        review = {
+            "time": datetime.utcnow().isoformat(),
+            "dealership": dealer_id,
+            "review": request.POST.get('review')  # Obtiene la reseña del formulario o de donde sea necesario
+        }
+        
+        # Crea el diccionario json_payload con la reseña
+        json_payload = {
+            "review": review
+        }
+        
+        # Llama al método post_request para realizar la solicitud POST
+        response = post_request(url, json_payload, dealerId=dealer_id)
+        
+        if response:
+            # Puedes imprimir la respuesta en la consola o incluirla en la respuesta HTTP
+            print("Post Response:", response)
+            return HttpResponse("Review added successfully.")
+        else:
+            return HttpResponse("Failed to add review.")
+
 
